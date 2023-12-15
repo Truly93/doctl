@@ -58,7 +58,26 @@ build: _build
 .PHONY: native
 native: build
 	@echo ""
-	@echo "==> The 'native' target is deprecated. Use 'make build'"
+	# NOTE: Adding a target so it shows up in the help listing
+	#    - The description is the text that is echoed in the first command in the target.
+	#    - Only 'public' targets (start with an alphanumeric character) display in the help listing.
+	#    - All public targets need a description
+
+	export CGO_ENABLED = 0
+
+	export GO111MODULE := on
+
+	# ... (rest of the code)
+
+	.PHONY: build
+	build: _build
+		@echo "==> build local version"
+		@echo ""
+		@mv $(OUT_D)/doctl_$(GOOS)_$(GOARCH) $(OUT_D)/doctl
+		@echo "installed as $(OUT_D)/doctl"
+
+	# ... (rest of the code)
+
 
 .PHONY: _build_linux_amd64
 _build_linux_amd64: GOOS = linux
